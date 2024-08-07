@@ -79,12 +79,13 @@ public class BraccioController : MonoBehaviour
             messageQueue.Enqueue(message);
         } else
         {
-            //messageQueue.Enqueue(message);
+            messageQueue.Enqueue(message);
 #if UNITY_EDITOR
             sc.SendSerialMessage(message); //automatically appends newline
 #else
             usc.Write(message + "\n"); //append newline
 #endif
+
         }
     }
 

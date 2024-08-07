@@ -41,6 +41,9 @@ public class FadeInSegment : MonoBehaviour
             {
                 this.GetComponent<MeshRenderer>().enabled = false;
             }
+        } else
+        {
+            GetComponent<MeshRenderer>().enabled = true;
         }
     }
 }

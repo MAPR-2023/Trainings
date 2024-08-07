@@ -251,6 +251,7 @@ namespace DitzelGames.FastIK
             {
                 firstTime = false;
                 SendRotations();
+                SendWithLimiter("T-180");
             }
 
             //time += Time.deltaTime;
@@ -269,8 +270,9 @@ namespace DitzelGames.FastIK
 
             // find rotations
             float BaseRotation = Mathf.Atan2(this.targetProjectedToFloor.x, this.targetProjectedToFloor.z) * 180 / Mathf.PI;
-            float ShoulderRotation = Vector3.Angle(ShoulderSegmentVector, desk.transform.position);
-            float ElbowRotation = Vector3.Angle(ElbowSegmentVector, ShoulderSegmentVector);
+            float BaseRotationFlipped = ((BaseRotation + 360.0f) % 360.0f) - 180.0f; // so that the singularity is at the back and not in the front
+            float ShoulderRotation = Vector3.Angle(ShoulderSegmentVector, desk.transform.position);// + 5.0f;
+            float ElbowRotation = Vector3.Angle(ElbowSegmentVector, ShoulderSegmentVector);// + 5.0f;
             float WristRotation = Vector3.Angle(WristSegmentVector, ElbowSegmentVector);
 
             // make negative angles if behind bottom segment
@@ -281,9 +283,10 @@ namespace DitzelGames.FastIK
             if (UsingLimits && angleBetweenElbowAndShoulder > 0 && ShoulderRotation < 4 && ShoulderRotation > -4) // see if angle is negative
                 ElbowRotation = -ElbowRotation;
             //if (UsingLimits && Vector3.Cross(WristSegmentVector, ElbowSegmentVector).y >= 0)
-            //    WristRotation = -WristRotation;
+            WristRotation = -WristRotation;
 
             // create data string & send
+            //Debug.Log(BaseRotation + " " + BaseRotationFlipped);
             string anglesData = "B" + BaseRotation + " S" + ShoulderRotation + " E" + ElbowRotation + " W" + WristRotation;
             SendWithLimiter(anglesData);
             
